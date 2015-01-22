@@ -48,7 +48,7 @@ module Mongoid
     # @param [ String ] name The database name.
     #
     # @since 3.0.0
-    def connect_to(name, options = { read: :primary })
+    def connect_to(name, options = { read: { mode: :primary }})
       self.sessions = {
         default: {
           database: name,
@@ -169,7 +169,7 @@ module Mongoid
     #
     # @since 2.0.2
     def purge!
-      Sessions.default.collections.each do |collection|
+      Sessions.default.database.collections.each do |collection|
         collection.drop
       end and true
     end
@@ -185,8 +185,8 @@ module Mongoid
     #
     # @since 2.0.2
     def truncate!
-      Sessions.default.collections.each do |collection|
-        collection.find.remove_all
+      Sessions.default.database.collections.each do |collection|
+        collection.find.remove_many
       end and true
     end
 

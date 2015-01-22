@@ -47,7 +47,8 @@ module Mongoid
       # @since 3.1.0
       def disconnect
         Threaded.sessions.values.each do |session|
-          session.disconnect
+          # @todo: Durran: Do we need?
+          # session.disconnect
         end
       end
 
@@ -63,6 +64,10 @@ module Mongoid
       # @since 3.0.0
       def with_name(name)
         Threaded.sessions[name.to_sym] ||= Sessions::Factory.create(name)
+      end
+
+      def set(name, session)
+        Threaded.sessions[name.to_sym] = session
       end
     end
 
@@ -103,8 +108,9 @@ module Mongoid
       # @since 3.0.0
       def mongo_session
         session = Sessions.with_name(session_name)
-        session.use(database_name)
-        self.persistence_options ? session.with(self.persistence_options) : session
+        session = session.use(database_name)
+        session = self.persistence_options.blank? ? session : session.with(self.persistence_options)
+        Sessions.set(session_name, session)
       end
 
       # Get the collection for this model from the session. Will check for an

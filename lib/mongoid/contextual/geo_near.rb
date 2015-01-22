@@ -230,7 +230,7 @@ module Mongoid
       #
       # @since 3.0.0
       def results
-        @results ||= session.command(command)
+        @results ||= session.command(command).first
       end
     end
   end
