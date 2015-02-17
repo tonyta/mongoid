@@ -266,7 +266,7 @@ describe Mongoid::Sessions do
     end
   end
 
-  describe "#database_name" do
+  describe "#database_name", if: non_legacy_server? do
 
     shared_examples_for "an overridden database name" do
 
@@ -372,7 +372,7 @@ describe Mongoid::Sessions do
     end
   end
 
-  describe "#mongo_session" do
+  describe "#mongo_session", if: non_legacy_server? do
 
     let(:file) do
       File.join(File.dirname(__FILE__), "..", "config", "mongoid.yml")
@@ -545,7 +545,7 @@ describe Mongoid::Sessions do
     end
   end
 
-  describe ".mongo_session" do
+  describe ".mongo_session", if: non_legacy_server? do
 
     let(:file) do
       File.join(File.dirname(__FILE__), "..", "config", "mongoid.yml")
@@ -632,7 +632,7 @@ describe Mongoid::Sessions do
     end
   end
 
-  describe ".store_in" do
+  describe ".store_in", if: non_legacy_server? do
 
     context "when provided a non hash" do
 
@@ -669,7 +669,7 @@ describe Mongoid::Sessions do
     end
   end
 
-  describe ".with" do
+  describe ".with", if: non_legacy_server? do
 
     context "when sending operations to a different database" do
 
@@ -995,7 +995,7 @@ describe Mongoid::Sessions do
           it "bubbles up to the caller" do
             expect {
               Person.create(ssn: "432-97-1111")
-            }.to raise_error(Mongo::Error::CommandFailure)
+            }.to raise_error(Mongo::Error::OperationFailure)
           end
         end
       end
@@ -1022,7 +1022,7 @@ describe Mongoid::Sessions do
           it "bubbles up to the caller" do
             expect {
               Person.create!(ssn: "432-97-1112")
-            }.to raise_error(Mongo::Error::CommandFailure)
+            }.to raise_error(Mongo::Error::OperationFailure)
           end
         end
 
@@ -1055,7 +1055,7 @@ describe Mongoid::Sessions do
           it "bubbles up to the caller" do
             expect {
               person.save
-            }.to raise_error(Mongo::Error::CommandFailure)
+            }.to raise_error(Mongo::Error::OperationFailure)
           end
         end
       end
@@ -1079,7 +1079,7 @@ describe Mongoid::Sessions do
           it "bubbles up to the caller" do
             expect {
               person.save!
-            }.to raise_error(Mongo::Error::CommandFailure)
+            }.to raise_error(Mongo::Error::OperationFailure)
           end
         end
 
@@ -1122,7 +1122,7 @@ describe Mongoid::Sessions do
     end
   end
 
-  context "when overriding the default database "do
+  context "when overriding the default database", if: non_legacy_server? do
 
     let(:file) do
       File.join(File.dirname(__FILE__), "..", "config", "mongoid.yml")
@@ -1155,7 +1155,7 @@ describe Mongoid::Sessions do
     end
   end
 
-  context "when overriding the default session", config: :mongohq do
+  context "when overriding the default session", config: :mongohq, if: non_legacy_server? do
 
     pending "when the override is configured with a uri" do
 
